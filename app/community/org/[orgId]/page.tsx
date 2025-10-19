@@ -1,9 +1,10 @@
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Plus, Calendar, MapPin, Users, Star, QrCode } from 'lucide-react';
+import { isOrgMember } from '@/lib/auth';
 
 // Mock data
 const mockOrganization = {
@@ -81,16 +82,21 @@ interface PageProps {
 export default function OrganizationPage({ params }: PageProps) {
   const { orgId } = params;
 
+  // Check if user is a member of this organization
+  if (!isOrgMember(orgId)) {
+    redirect('/community/dashboard');
+  }
+
   // Mock organization lookup
   if (orgId !== 'org-1') {
     notFound();
   }
 
   const progressPercentage = (current: number, target: number) => 
-    Math.min((current / target) * 100, 100);
+    Math.min(1, current / target);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-community-violet/10" data-theme="community">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex justify-between items-start mb-8">
@@ -111,13 +117,13 @@ export default function OrganizationPage({ params }: PageProps) {
             <Link href={`/community/org/${orgId}/create-event`}>
               <Button className="bg-purple-600 hover:bg-purple-700 text-white">
                 <Plus className="w-4 h-4 mr-2" />
-                イベント作成
+                イベントを作成
               </Button>
             </Link>
             <Link href={`/community/org/${orgId}/create-place`}>
               <Button variant="outline">
                 <MapPin className="w-4 h-4 mr-2" />
-                場所追加
+                場所を追加
               </Button>
             </Link>
           </div>
@@ -181,7 +187,7 @@ export default function OrganizationPage({ params }: PageProps) {
             <Link href={`/community/org/${orgId}/create-event`}>
               <Button variant="outline" size="sm">
                 <Plus className="w-4 h-4 mr-2" />
-                新しいイベント
+                イベントを作成
               </Button>
             </Link>
           </div>
@@ -216,10 +222,10 @@ export default function OrganizationPage({ params }: PageProps) {
                         <span>進捗</span>
                         <span>{event.current_stars} / {event.target_star_count}</span>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
                         <div 
-                          className="bg-purple-600 h-2 rounded-full transition-all duration-300"
-                          style={{ width: `${progressPercentage(event.current_stars, event.target_star_count)}%` }}
+                          className="bg-gradient-to-r from-purple-500 to-purple-600 h-3 rounded-full transition-all duration-500 ease-out shadow-sm"
+                          style={{ width: `${progressPercentage(event.current_stars, event.target_star_count) * 100}%` }}
                         ></div>
                       </div>
                     </div>
@@ -248,7 +254,7 @@ export default function OrganizationPage({ params }: PageProps) {
             <Link href={`/community/org/${orgId}/create-place`}>
               <Button variant="outline" size="sm">
                 <Plus className="w-4 h-4 mr-2" />
-                新しい場所
+                場所を追加
               </Button>
             </Link>
           </div>

@@ -1,9 +1,10 @@
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Calendar, MapPin, Users, Star, QrCode, Share2, Download } from 'lucide-react';
+import { isOrgMember } from '@/lib/auth';
 
 // Mock data
 const mockEvent = {
@@ -45,12 +46,17 @@ interface PageProps {
 export default function EventDetailPage({ params }: PageProps) {
   const { orgId, eventId } = params;
 
+  // Check if user is a member of this organization
+  if (!isOrgMember(orgId)) {
+    redirect('/community/dashboard');
+  }
+
   // Mock event lookup
   if (orgId !== 'org-1' || eventId !== 'event-1') {
     notFound();
   }
 
-  const progressPercentage = (mockEvent.current_stars / mockEvent.target_star_count) * 100;
+  const progressPercentage = Math.min(1, mockEvent.current_stars / mockEvent.target_star_count);
   const qrUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/community/scan/${mockEvent.public_id}`;
 
   const handleShareQR = () => {
@@ -67,7 +73,7 @@ export default function EventDetailPage({ params }: PageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-community-violet/10" data-theme="community">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center mb-8">
@@ -84,11 +90,11 @@ export default function EventDetailPage({ params }: PageProps) {
           <div className="flex space-x-3">
             <Button onClick={handleShareQR} variant="outline">
               <Share2 className="w-4 h-4 mr-2" />
-              QRを共有
+              URLをコピー
             </Button>
             <Button className="bg-purple-600 hover:bg-purple-700 text-white">
               <QrCode className="w-4 h-4 mr-2" />
-              QRコード表示
+              QRを発行
             </Button>
           </div>
         </div>
@@ -137,15 +143,15 @@ export default function EventDetailPage({ params }: PageProps) {
                       {mockEvent.current_stars} / {mockEvent.target_star_count}
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-3">
+                  <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
                     <div 
-                      className="bg-purple-600 h-3 rounded-full transition-all duration-300"
-                      style={{ width: `${Math.min(progressPercentage, 100)}%` }}
+                      className="bg-gradient-to-r from-purple-500 to-purple-600 h-4 rounded-full transition-all duration-500 ease-out shadow-sm"
+                      style={{ width: `${progressPercentage * 100}%` }}
                     ></div>
                   </div>
                   <div className="text-center">
                     <span className="text-2xl font-bold text-purple-600">
-                      {Math.round(progressPercentage)}%
+                      {Math.round(progressPercentage * 100)}%
                     </span>
                     <p className="text-sm text-gray-600">目標達成率</p>
                   </div>
@@ -219,11 +225,11 @@ export default function EventDetailPage({ params }: PageProps) {
                 <div className="space-y-2">
                   <Button onClick={handleShareQR} className="w-full" variant="outline">
                     <Share2 className="w-4 h-4 mr-2" />
-                    共有
+                    URLをコピー
                   </Button>
                   <Button className="w-full" variant="outline">
                     <Download className="w-4 h-4 mr-2" />
-                    ダウンロード
+                    PNGをダウンロード
                   </Button>
                 </div>
                 <p className="text-xs text-gray-500 mt-2">

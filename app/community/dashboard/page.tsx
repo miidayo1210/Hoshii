@@ -36,7 +36,7 @@ const mockOrganizations = [
 
 export default function CommunityDashboardPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-community-violet/10" data-theme="community">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
@@ -47,7 +47,7 @@ export default function CommunityDashboardPage() {
           <Link href="/community/dashboard/create">
             <Button className="bg-purple-600 hover:bg-purple-700 text-white">
               <Plus className="w-4 h-4 mr-2" />
-              新しいコミュニティ
+              コミュニティ組織を作成
             </Button>
           </Link>
         </div>
@@ -134,7 +134,7 @@ export default function CommunityDashboardPage() {
                 <Link href="/community/dashboard/create">
                   <Button className="bg-purple-600 hover:bg-purple-700 text-white">
                     <Plus className="w-4 h-4 mr-2" />
-                    コミュニティを作成
+                    コミュニティ組織を作成
                   </Button>
                 </Link>
               </CardContent>

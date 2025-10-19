@@ -123,6 +123,15 @@ npm start
 - `POST /api/scan` - Record action completions from QR scans
 - `GET /api/scan?publicId=[id]` - Get event data for public scanning
 - `GET /api/render/constellation?eventId=[id]` - Generate constellation visualization
+- `GET /api/community/export/actions?eventId=[id]` - Export actions data as CSV
+- `GET /api/community/export/stars?eventId=[id]` - Export stars data as CSV
+
+### QR Code Testing
+
+1. **Demo QR Code**: Visit `/community/scan/demo` to test the scan experience
+2. **Generate QR**: Create an event and generate a QR code from the event detail page
+3. **Test Flow**: Scan QR → Select actions → Submit → View success message
+4. **Mobile Testing**: Use your phone's camera to scan QR codes and test the mobile experience
 
 ## Data Layer
 

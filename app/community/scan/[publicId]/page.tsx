@@ -55,6 +55,11 @@ export default function PublicScanPage({ params }: PageProps) {
   }, [publicId]);
 
   const handleActionToggle = (actionId: string) => {
+    // Haptic feedback for action selection
+    if (navigator.vibrate) {
+      navigator.vibrate(50);
+    }
+    
     setSelectedActions(prev => 
       prev.includes(actionId) 
         ? prev.filter(id => id !== actionId)
@@ -64,6 +69,11 @@ export default function PublicScanPage({ params }: PageProps) {
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
+    
+    // Haptic feedback simulation
+    if (navigator.vibrate) {
+      navigator.vibrate([100, 50, 100]);
+    }
     
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 2000));
@@ -83,7 +93,7 @@ export default function PublicScanPage({ params }: PageProps) {
     return sum + (action?.value || 0);
   }, 0);
 
-  const progressPercentage = (mockEvent.current_stars / mockEvent.target_star_count) * 100;
+  const progressPercentage = Math.min(1, mockEvent.current_stars / mockEvent.target_star_count);
 
   if (showSuccess) {
     return (
@@ -107,7 +117,7 @@ export default function PublicScanPage({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-community-violet to-community-lavender" data-theme="community">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-8">
@@ -140,14 +150,14 @@ export default function PublicScanPage({ params }: PageProps) {
                   <p className="text-sm text-gray-600">目標</p>
                 </div>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-3 mb-2">
+              <div className="w-full bg-gray-200 rounded-full h-4 mb-2 overflow-hidden">
                 <div 
-                  className="bg-purple-600 h-3 rounded-full transition-all duration-300"
-                  style={{ width: `${Math.min(progressPercentage, 100)}%` }}
+                  className="bg-gradient-to-r from-purple-500 to-purple-600 h-4 rounded-full transition-all duration-500 ease-out shadow-sm"
+                  style={{ width: `${progressPercentage * 100}%` }}
                 ></div>
               </div>
               <p className="text-sm text-gray-600">
-                {Math.round(progressPercentage)}% 達成
+                {Math.round(progressPercentage * 100)}% 達成
               </p>
             </div>
           </CardContent>
@@ -166,33 +176,37 @@ export default function PublicScanPage({ params }: PageProps) {
               {mockEvent.actionPackage.actions.map((action) => (
                 <div
                   key={action.id}
-                  className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
+                  className={`border-2 rounded-xl p-6 cursor-pointer transition-all duration-200 transform ${
                     selectedActions.includes(action.id)
-                      ? 'border-purple-500 bg-purple-50'
-                      : 'border-gray-200 hover:border-gray-300'
+                      ? 'border-purple-500 bg-purple-50 scale-105 shadow-lg'
+                      : 'border-gray-200 hover:border-gray-300 hover:scale-102'
                   }`}
                   onClick={() => handleActionToggle(action.id)}
+                  style={{
+                    minHeight: '120px',
+                    touchAction: 'manipulation',
+                  }}
                 >
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between h-full">
                     <div className="flex-1">
-                      <div className="flex items-center space-x-3">
-                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                      <div className="flex items-start space-x-4">
+                        <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all ${
                           selectedActions.includes(action.id)
                             ? 'border-purple-500 bg-purple-500'
                             : 'border-gray-300'
                         }`}>
                           {selectedActions.includes(action.id) && (
-                            <CheckCircle className="w-4 h-4 text-white" />
+                            <CheckCircle className="w-5 h-5 text-white" />
                           )}
                         </div>
-                        <div>
-                          <h4 className="font-medium">{action.title}</h4>
-                          <p className="text-sm text-gray-600">{action.description}</p>
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-lg mb-2">{action.title}</h4>
+                          <p className="text-gray-600">{action.description}</p>
                         </div>
                       </div>
                     </div>
-                    <Badge variant="outline" className="ml-4">
-                      <Star className="w-3 h-3 mr-1" />
+                    <Badge variant="outline" className="ml-4 text-lg px-3 py-1">
+                      <Star className="w-4 h-4 mr-1" />
                       {action.value}
                     </Badge>
                   </div>
@@ -226,23 +240,23 @@ export default function PublicScanPage({ params }: PageProps) {
           <Button
             onClick={handleSubmit}
             disabled={selectedActions.length === 0 || isSubmitting}
-            className="bg-purple-600 hover:bg-purple-700 text-white px-12 py-4 text-lg"
+            className="bg-purple-600 hover:bg-purple-700 text-white px-16 py-6 text-xl font-semibold min-h-[64px] w-full max-w-md"
             size="lg"
           >
             {isSubmitting ? (
               <div className="flex items-center">
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white mr-3"></div>
                 送信中...
               </div>
             ) : (
               <div className="flex items-center">
-                <Heart className="w-5 h-5 mr-2" />
+                <Heart className="w-6 h-6 mr-3" />
                 アクションを記録
               </div>
             )}
           </Button>
           {selectedActions.length === 0 && (
-            <p className="text-sm text-gray-500 mt-2">
+            <p className="text-sm text-gray-500 mt-3">
               少なくとも1つのアクションを選択してください
             </p>
           )}

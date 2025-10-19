@@ -5,7 +5,7 @@ import { Users, Heart, Star, Zap } from 'lucide-react';
 
 export default function CommunityPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-community-violet to-community-lavender" data-theme="community">
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center mb-12">
@@ -13,12 +13,12 @@ export default function CommunityPage() {
             Hoshii for Community
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            地域コミュニティと一緒に、ポジティブなアクションで世界をより良くしましょう
+            やさしさを、まちの星に。
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/community/dashboard">
               <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3">
-                コミュニティを始める
+                コミュニティ組織を作成
               </Button>
             </Link>
             <Link href="/community/scan/demo">

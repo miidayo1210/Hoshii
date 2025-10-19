@@ -52,6 +52,16 @@ const config: Config = {
           sand: "#F5E6D3",     // 砂浜
           ink: "#2C3E3D",      // 深い森
         },
+        community: {
+          purple: "#8B5CF6",   // コミュニティ紫
+          purple2: "#A78BFA",  // ライト紫
+          lavender: "#DDD6FE", // ラベンダー
+          violet: "#EDE9FE",   // バイオレット
+          indigo: "#6366F1",   // インディゴ
+          blue: "#3B82F6",     // ブルー
+          teal: "#14B8A6",     // ティール
+          emerald: "#10B981",  // エメラルド
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
