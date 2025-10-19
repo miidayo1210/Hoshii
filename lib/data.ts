@@ -8,6 +8,30 @@ export interface User {
   createdAt: string;
 }
 
+export interface Organization {
+  id: string;
+  name: string;
+  description: string;
+  product: 'business' | 'community';
+  createdAt: string;
+}
+
+export interface Place {
+  id: string;
+  name: string;
+  description: string;
+  orgId: string;
+  createdAt: string;
+}
+
+export interface ActionPackage {
+  id: string;
+  name: string;
+  description: string;
+  actions: Action[];
+  createdAt: string;
+}
+
 export type ActionDomain = 'health' | 'environment' | 'community' | 'learning' | 'wellbeing';
 
 export interface Action {
@@ -39,6 +63,8 @@ export interface Event {
   description: string;
   orgId: string;
   createdAt: string;
+  public_id?: string; // For community QR codes
+  target_star_count?: number; // For community events
 }
 
 export interface EventParticipation {
