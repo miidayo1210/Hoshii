@@ -15,8 +15,14 @@ A minimal, joyful web app for tracking positive actions and earning points throu
 - **/org/demo** - Organization dashboard
 - **/org/demo/overview** - Company-wide analytics with domain heatmap and monthly trends
 
-### Community Module (Hoshii for Community)
-- **/community** - Community landing page
+### Community Module (Hoshii for Community) - Pinterest Style
+- **/community/home** - Pinterest-like feed with personal/community tabs
+- **/community/discover** - Explore with search and filters (tags/area/type)
+- **/community/create** - Creation wizard (Action Card, Package, Event)
+- **/community/notifications** - Real-time updates and notifications
+- **/community/action/[id]** - Action detail with star functionality
+- **/community/board/[id]** - Community board page with pins grid
+- **/community/profile/[id]** - User profile with constellation
 - **/community/dashboard** - Community organizations dashboard
 - **/community/dashboard/create** - Create new community organization
 - **/community/org/[orgId]** - Organization management page with places and events
@@ -34,6 +40,10 @@ A minimal, joyful web app for tracking positive actions and earning points throu
 - **EventParticipation** - tracks user event participation
 - **RedeemItem** - rewards catalog
 - **Redemption** - redemption history
+- **Community** - Pinterest-style communities with cover images and tags
+- **Star** - user stars on actions (like Pinterest pins)
+- **Profile** - user profiles with total stars and constellation data
+- **Comment** - optional comments on actions
 
 ### Components
 - **NavBar** - Bottom navigation with Today/Events/Me/Redeem/Org tabs
@@ -45,6 +55,11 @@ A minimal, joyful web app for tracking positive actions and earning points throu
 - **ThanksModal** - Celebratory modal with templates (society/environment/peer)
 - **QRPreview** - QR code display and sharing component
 - **ProgressBar** - Progress tracking components (linear, circular, multi-step)
+- **MasonryGrid** - Pinterest-style masonry layout for cards
+- **CommunityNavbar** - Unified navigation for community module
+- **CommunitySidebar** - Desktop sidebar navigation
+- **TabSwitcher** - Personal/Community tab switcher
+- **CreateActionModal** - Action creation modal with validation
 
 ### Features
 - ✅ PWA enabled (works offline, installable)
@@ -125,6 +140,17 @@ npm start
 - `GET /api/render/constellation?eventId=[id]` - Generate constellation visualization
 - `GET /api/community/export/actions?eventId=[id]` - Export actions data as CSV
 - `GET /api/community/export/stars?eventId=[id]` - Export stars data as CSV
+- `POST /api/community/star` - Star/unstar an action
+- `DELETE /api/community/star?actionId=[id]` - Remove star from action
+- `GET /api/community/search` - Search actions and communities with filters
+
+### Pinterest-Style Community Quickstart
+
+1. **Home Feed**: Visit `/community/home` to see Pinterest-style masonry feed
+2. **Discover**: Use `/community/discover` to search and filter content
+3. **Create**: Go to `/community/create` to create action cards, packages, or events
+4. **Star Actions**: Click star buttons to save actions to your personal feed
+5. **Mobile Navigation**: Use bottom navigation for easy mobile access
 
 ### QR Code Testing
 
