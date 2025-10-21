@@ -24,3 +24,4 @@ export const COMMUNITY_ACTIONS_SEED: SeedAction[] = [
   // No.17 は未記入のためスキップ
 ];
 
+

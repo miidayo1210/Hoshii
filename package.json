@@ -9,7 +9,9 @@
     "lint": "next lint",
     "test": "jest",
     "migrate": "node scripts/run-migration.js",
-    "migrate:community": "node scripts/run-migration.js migrations/001_add_community_features.sql"
+    "migrate:community": "node scripts/run-migration.js migrations/001_add_community_features.sql",
+    "export": "next build && next export",
+    "deploy": "npm run build"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

@@ -85,3 +85,4 @@ export default function StarBurst() {
   return <div ref={ref} className="fixed inset-0 pointer-events-none z-[60]" />;
 }
 
+

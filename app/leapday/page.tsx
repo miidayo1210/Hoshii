@@ -29,8 +29,16 @@ export default function Page(){
           </div>
         </div>
         <p className="text-[15px] text-gray-600 text-center">会場やオンラインからアクションが実行されると、星が増えていきます。</p>
-        <div className="text-center">
+        <div className="text-center space-y-3">
           <DreamButton as="a" href="/leapday/support" className="inline-block">💖 応援する</DreamButton>
+          <div>
+            <Link 
+              href="/leapday/member" 
+              className="inline-block px-4 py-2 bg-white/70 text-[var(--yk-ink)] rounded-full text-sm hover:bg-white/90 transition-colors duration-200"
+            >
+              👥 メンバー一覧を見る
+            </Link>
+          </div>
         </div>
       </section>
     </div>

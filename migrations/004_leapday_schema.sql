@@ -21,3 +21,4 @@ create policy "public read actions" on public.leapday_actions for select using (
 create policy "public insert participation" on public.leapday_participations for insert with check (true);
 create policy "public read participation count" on public.leapday_participations for select using (true);
 
+

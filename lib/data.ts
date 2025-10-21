@@ -101,6 +101,8 @@ export interface DataLayer {
   // User
   getCurrentUser(): User | null;
   updateUserStamps(userId: string, stamps: number): void;
+  getAllUsers(): User[];
+  deleteUser(userId: string): boolean;
 
   // Actions
   getActions(): Action[];
@@ -163,6 +165,22 @@ class LocalStorageDataLayer implements DataLayer {
           name: 'Alex Chen',
           email: 'alex@demo.com',
           stamps: 15,
+          orgId: 'demo',
+          createdAt: now,
+        },
+        {
+          id: 'user-2',
+          name: '田中 花子',
+          email: 'hanako@demo.com',
+          stamps: 8,
+          orgId: 'demo',
+          createdAt: now,
+        },
+        {
+          id: 'user-3',
+          name: '佐藤 太郎',
+          email: 'taro@demo.com',
+          stamps: 12,
           orgId: 'demo',
           createdAt: now,
         },
@@ -287,6 +305,35 @@ class LocalStorageDataLayer implements DataLayer {
   getCurrentUser(): User | null {
     const data = this.getData();
     return data.users[0] || null;
+  }
+
+  getAllUsers(): User[] {
+    return this.getData().users;
+  }
+
+  deleteUser(userId: string): boolean {
+    const data = this.getData();
+    const userIndex = data.users.findIndex((u: User) => u.id === userId);
+    
+    if (userIndex === -1) {
+      return false; // User not found
+    }
+
+    // Remove user
+    data.users.splice(userIndex, 1);
+
+    // Remove all related data
+    // Remove action logs
+    data.actionLogs = data.actionLogs.filter((log: ActionLog) => log.userId !== userId);
+    
+    // Remove event participations
+    data.eventParticipations = data.eventParticipations.filter((p: EventParticipation) => p.userId !== userId);
+    
+    // Remove redemptions
+    data.redemptions = data.redemptions.filter((r: Redemption) => r.userId !== userId);
+
+    this.saveData(data);
+    return true;
   }
 
   updateUserStamps(userId: string, stamps: number): void {
