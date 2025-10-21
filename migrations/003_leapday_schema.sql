@@ -34,3 +34,4 @@ CREATE POLICY "Allow public insert access to participations" ON leapday_particip
 -- Allow public read access to participations (for stats)
 CREATE POLICY "Allow public read access to participations" ON leapday_participations
   FOR SELECT USING (true);
+

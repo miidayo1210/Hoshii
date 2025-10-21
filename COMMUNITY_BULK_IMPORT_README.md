@@ -142,3 +142,4 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 - **コミュニティ名**: `server/community/bulkImport.ts` の `ensureSeedCommunity` 関数
 - **タグ解析ロジック**: `parseTags` 関数
 - **重複チェック**: タイトルベースの重複回避ロジック
+

@@ -22,3 +22,4 @@ export async function sendMail(opts: {
     attachments: opts.attachments as any,
   });
 }
+

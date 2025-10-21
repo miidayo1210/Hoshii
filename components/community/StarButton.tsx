@@ -37,3 +37,4 @@ export function StarButton({ actionId }: StarButtonProps) {
     </button>
   );
 }
+

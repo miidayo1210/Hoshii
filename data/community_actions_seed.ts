@@ -23,3 +23,4 @@ export const COMMUNITY_ACTIONS_SEED: SeedAction[] = [
   { title: "🌏 地元の野菜を買う", desc: "近くの農家さんを応援する。", tagsRaw: "#ローカル #食" },
   // No.17 は未記入のためスキップ
 ];
+

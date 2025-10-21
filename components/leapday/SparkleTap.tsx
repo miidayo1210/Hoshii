@@ -28,3 +28,4 @@ export default function SparkleTap(){
   },[]);
   return <div ref={ref} className="fixed inset-0 pointer-events-none z-[60]" />;
 }
+

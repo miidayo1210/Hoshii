@@ -33,3 +33,4 @@ export function BoardCard({ b }: BoardCardProps) {
     </Link>
   );
 }
+
