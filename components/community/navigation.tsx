@@ -37,7 +37,7 @@ const navigationItems = [
   },
 ];
 
-export function CommunityNavbar() {
+export function CommunityNavigation() {
   const pathname = usePathname();
 
   return (

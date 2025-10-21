@@ -2,6 +2,46 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Yume-kawaii theme tokens */
+:root {
+  --yk-bg: #fdf7ff;
+  --yk-card: #ffffff;
+  --yk-ink: #3a3a4a;
+  --yk-accent: #b388ff;   /* pastel purple */
+  --yk-accent-2: #8be3ff; /* pastel cyan */
+  --yk-accent-3: #ffd1e8; /* sakura pink */
+  --yk-emerald: #9af7d7;
+  --yk-shadow: 0 10px 30px rgba(179,136,255,0.25);
+  --yk-glow: 0 0 24px rgba(139,227,255,0.45);
+}
+html, body { background: var(--yk-bg); }
+
+.yk-card { background: var(--yk-card); box-shadow: var(--yk-shadow); }
+.yk-glow { box-shadow: var(--yk-glow); }
+
+@keyframes floaty {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0px); }
+}
+@keyframes twinkle {
+  0%,100% { opacity: .8; filter: blur(0px);}
+  50% { opacity: 1; filter: blur(0.5px);}
+}
+@keyframes jelly {
+  0% { transform: scale(1,1); }
+  40% { transform: scale(0.96,1.04); }
+  70% { transform: scale(1.03,0.97); }
+  100% { transform: scale(1,1); }
+}
+
+/* soft gradient halo used behind hero titles */
+.yk-halo {
+  background: radial-gradient(1200px 500px at 20% 0%, rgba(179,136,255,0.25), transparent 60%),
+              radial-gradient(1000px 600px at 80% 20%, rgba(139,227,255,0.25), transparent 60%),
+              radial-gradient(800px 500px at 50% 100%, rgba(255,209,232,0.25), transparent 60%);
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

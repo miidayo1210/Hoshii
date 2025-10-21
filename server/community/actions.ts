@@ -53,7 +53,7 @@ export async function createAction(formData: FormData) {
     return { success: true, action: newAction };
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return { success: false, errors: error.errors };
+      return { success: false, errors: error.issues };
     }
     throw error;
   }
@@ -127,7 +127,7 @@ export async function createCommunity(formData: FormData) {
     return { success: true, community: newCommunity };
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return { success: false, errors: error.errors };
+      return { success: false, errors: error.issues };
     }
     throw error;
   }

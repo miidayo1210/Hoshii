@@ -91,7 +91,7 @@ export function CreateActionModal({ children, onActionCreated }: CreateActionMod
     } catch (error) {
       if (error instanceof z.ZodError) {
         const fieldErrors: Record<string, string> = {};
-        error.errors.forEach(err => {
+        error.issues.forEach(err => {
           if (err.path[0]) {
             fieldErrors[err.path[0] as string] = err.message;
           }
@@ -105,7 +105,7 @@ export function CreateActionModal({ children, onActionCreated }: CreateActionMod
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger>
         {children}
       </DialogTrigger>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">

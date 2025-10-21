@@ -488,7 +488,7 @@ class LocalStorageDataLayer implements DataLayer {
       if (orgUserIds.includes(log.userId)) {
         const action = data.actions.find((a: Action) => a.id === log.actionId);
         if (action) {
-          breakdown[action.domain] += log.stampsAwarded;
+          breakdown[action.domain as ActionDomain] += log.stampsAwarded;
         }
       }
     });
@@ -498,7 +498,7 @@ class LocalStorageDataLayer implements DataLayer {
       if (orgUserIds.includes(p.userId) && p.completedAt) {
         const event = data.events.find((e: Event) => e.id === p.eventId);
         if (event) {
-          breakdown[event.domain] += p.stampsAwarded || 0;
+          breakdown[event.domain as ActionDomain] += p.stampsAwarded || 0;
         }
       }
     });

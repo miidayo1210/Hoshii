@@ -1,91 +1,45 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase";
 
-export async function POST(request: NextRequest) {
+export async function POST(req: Request) {
   try {
-    const body = await request.json();
-    const { actionId } = body;
-
+    const { actionId } = await req.json();
+    
     if (!actionId) {
-      return NextResponse.json(
-        { error: 'Missing actionId parameter' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "actionId is required" }, { status: 400 });
     }
 
-    // In a real implementation, you would:
-    // 1. Get the current user from session/auth
-    // 2. Check if user already starred this action
-    // 3. Insert star record
-    // 4. Update action stars_count
-    // 5. Update user's total stars
+    const supabase = createClient();
+    const { data: action } = await supabase
+      .from("actions")
+      .select("id, stars_count")
+      .eq("id", actionId)
+      .single();
 
-    // Mock implementation
-    const starId = `star-${Date.now()}`;
-    const userId = 'user-1'; // Mock user ID
-
-    console.log('Starring action:', {
-      actionId,
-      userId,
-      starId,
-      timestamp: new Date().toISOString(),
-    });
-
-    // Return success response
-    return NextResponse.json({
-      success: true,
-      starId,
-      actionId,
-      userId,
-      message: 'アクションにスターを付けました',
-    });
-
-  } catch (error) {
-    console.error('Star action error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
-  }
-}
-
-export async function DELETE(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const actionId = searchParams.get('actionId');
-
-    if (!actionId) {
-      return NextResponse.json(
-        { error: 'Missing actionId parameter' },
-        { status: 400 }
-      );
+    if (!action) {
+      return NextResponse.json({ error: "not found" }, { status: 404 });
     }
 
-    // In a real implementation, you would:
-    // 1. Get the current user from session/auth
-    // 2. Delete star record
-    // 3. Update action stars_count
-    // 4. Update user's total stars
+    const user = (await supabase.auth.getUser()).data.user;
+    
+    if (!user) {
+      return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+    }
 
-    const userId = 'user-1'; // Mock user ID
+    // insert star
+    await supabase
+      .from("stars")
+      .insert({ user_id: user.id, action_id: actionId });
+    
+    // update stars count
+    await supabase
+      .from("actions")
+      .update({ stars_count: (action.stars_count ?? 0) + 1 })
+      .eq("id", actionId);
 
-    console.log('Unstarring action:', {
-      actionId,
-      userId,
-      timestamp: new Date().toISOString(),
-    });
-
-    return NextResponse.json({
-      success: true,
-      actionId,
-      userId,
-      message: 'アクションのスターを取り消しました',
-    });
-
+    return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error('Unstar action error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    console.error("Error starring action:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

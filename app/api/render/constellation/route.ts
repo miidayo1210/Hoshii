@@ -1,92 +1,38 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const eventId = searchParams.get('eventId');
+  const profileId = searchParams.get("profileId");
 
-  if (!eventId) {
-    return NextResponse.json(
-      { error: 'Missing eventId parameter' },
-      { status: 400 }
-    );
+  if (!profileId) {
+    return NextResponse.json({ error: "profileId is required" }, { status: 400 });
   }
 
-  try {
-    // In a real implementation, you would:
-    // 1. Look up the event by eventId
-    // 2. Get all the stars/actions for this event
-    // 3. Generate a constellation visualization
-    // 4. Return the image data or URL
+  // Create a simple SVG constellation as a placeholder
+  const svg = `
+    <svg width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100%" height="100%" fill="#000000"/>
+      <g stroke="#ffffff" stroke-width="2" fill="none">
+        <circle cx="100" cy="100" r="3" fill="#ffffff"/>
+        <circle cx="200" cy="150" r="3" fill="#ffffff"/>
+        <circle cx="150" cy="250" r="3" fill="#ffffff"/>
+        <circle cx="300" cy="200" r="3" fill="#ffffff"/>
+        <circle cx="250" cy="300" r="3" fill="#ffffff"/>
+        <line x1="100" y1="100" x2="200" y2="150"/>
+        <line x1="200" y1="150" x2="150" y2="250"/>
+        <line x1="150" y1="250" x2="300" y2="200"/>
+        <line x1="300" y1="200" x2="250" y2="300"/>
+      </g>
+      <text x="200" y="350" text-anchor="middle" fill="#ffffff" font-family="Arial" font-size="16">
+        ${profileId}'s Constellation
+      </text>
+    </svg>
+  `;
 
-    // Mock implementation - return a simple constellation data structure
-    const constellationData = {
-      eventId,
-      title: 'Park Cleanup Day',
-      stars: [
-        { id: 'star-1', x: 100, y: 150, value: 1, completedAt: '2024-12-01T10:00:00Z' },
-        { id: 'star-2', x: 200, y: 100, value: 2, completedAt: '2024-12-01T11:30:00Z' },
-        { id: 'star-3', x: 150, y: 200, value: 1, completedAt: '2024-12-01T14:00:00Z' },
-        { id: 'star-4', x: 250, y: 180, value: 1, completedAt: '2024-12-02T09:00:00Z' },
-        { id: 'star-5', x: 180, y: 120, value: 2, completedAt: '2024-12-02T15:30:00Z' },
-        { id: 'star-6', x: 220, y: 160, value: 1, completedAt: '2024-12-03T10:15:00Z' },
-      ],
-      connections: [
-        { from: 'star-1', to: 'star-2' },
-        { from: 'star-2', to: 'star-3' },
-        { from: 'star-3', to: 'star-4' },
-        { from: 'star-4', to: 'star-5' },
-        { from: 'star-5', to: 'star-6' },
-      ],
-      totalStars: 8,
-      targetStars: 50,
-      progress: 16, // percentage
-    };
-
-    // For now, return the data structure
-    // In a real implementation, you might generate an actual image
-    return NextResponse.json(constellationData);
-
-  } catch (error) {
-    console.error('Constellation render error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
-  }
-}
-
-// Alternative endpoint that returns an actual image
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const { eventId, format = 'png' } = body;
-
-    if (!eventId) {
-      return NextResponse.json(
-        { error: 'Missing eventId parameter' },
-        { status: 400 }
-      );
-    }
-
-    // In a real implementation, you would:
-    // 1. Generate an actual image using a library like Canvas or SVG
-    // 2. Return the image data
-
-    // Mock implementation - return a placeholder image URL
-    const imageUrl = `https://via.placeholder.com/800x600/6366f1/ffffff?text=Constellation+${eventId}`;
-
-    return NextResponse.json({
-      imageUrl,
-      eventId,
-      format,
-      generatedAt: new Date().toISOString(),
-    });
-
-  } catch (error) {
-    console.error('Constellation image generation error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
-  }
+  return new NextResponse(svg, {
+    headers: {
+      "Content-Type": "image/svg+xml",
+      "Cache-Control": "public, max-age=3600",
+    },
+  });
 }

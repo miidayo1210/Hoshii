@@ -53,7 +53,7 @@ export function QRPreview({ url, title, description, size = 'md' }: QRPreviewPro
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger>
         <Button variant="outline" size="sm">
           <QrCode className="w-4 h-4 mr-2" />
           QRコード
