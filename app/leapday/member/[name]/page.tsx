@@ -3,13 +3,18 @@ import StarSky from "@/components/leapday/StarSky";
 import DreamButton from "@/components/leapday/DreamButton";
 import MemberComments from "@/components/leapday/MemberComments";
 import StatsDisplay from "@/components/leapday/StatsDisplay";
-
-export const dynamic = "force-dynamic";
+import { memberNames } from "@/lib/member-names";
 
 interface PageProps {
   params: {
     name: string;
   };
+}
+
+export async function generateStaticParams() {
+  return memberNames.map((name) => ({
+    name: encodeURIComponent(name),
+  }));
 }
 
 export default function MemberPage({ params }: PageProps) {

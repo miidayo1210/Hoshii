@@ -66,7 +66,35 @@ export default function Page({ params }:{ params:{ slug:string } }){
           {params.slug}さんへの応援コメント
         </h2>
         {memberComments.length > 0 ? (
-          <FloatingComments comments={memberComments} />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {memberComments.map((comment, index) => (
+              <div key={index} className="yk-card p-4 bg-white/80 backdrop-blur border border-black/5">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+                    {comment.name.charAt(0)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-semibold text-sm text-gray-800">
+                        {comment.name}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {new Date(comment.created_at).toLocaleString('ja-JP', {
+                          month: 'short',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-700 leading-relaxed">
+                      {comment.comment}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         ) : (
           <div className="text-center text-gray-500 py-8">
             <p>まだ応援コメントはありません。</p>

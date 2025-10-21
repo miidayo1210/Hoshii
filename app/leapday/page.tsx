@@ -3,7 +3,6 @@ import StarSky from "@/components/leapday/StarSky";
 import DreamButton from "@/components/leapday/DreamButton";
 import FloatingComments from "@/components/leapday/FloatingComments";
 
-export const dynamic = "force-dynamic";
 export default function Page(){
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">

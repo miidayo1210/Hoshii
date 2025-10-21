@@ -45,7 +45,7 @@ export async function calcStars(skyId: SkyId): Promise<SkyStats> {
     };
   }
   
-  const totalStars = participations?.reduce((sum, part) => sum + (part.actions?.weight || 1), 0) || 0;
+  const totalStars = participations?.reduce((sum, part) => sum + ((part as any).actions?.weight || 1), 0) || 0;
   const totalActions = participations?.length || 0;
   const updatedAt = participations?.length > 0 
     ? participations[0].created_at 

@@ -29,7 +29,7 @@ export default function StarSky({ density = 220 }: { density?: number }){
     window.addEventListener("resize", onResize);
 
     // fetch star count and participation data
-    let participations: {action_key: string, created_at: string}[] = [];
+    let participations: {action_key: string, created_at: string, name?: string}[] = [];
     async function fetchStarData(){
       try {
         const [statsResponse, partsResponse] = await Promise.all([

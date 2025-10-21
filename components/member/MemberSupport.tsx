@@ -141,14 +141,12 @@ export default function MemberSupport({
 
               <div className="flex gap-2">
                 <DreamButton
-                  type="button"
                   onClick={() => setIsOpen(false)}
                   className="flex-1 bg-gray-500"
                 >
                   キャンセル
                 </DreamButton>
                 <DreamButton
-                  type="submit"
                   disabled={isSubmitting}
                   className="flex-1"
                 >
