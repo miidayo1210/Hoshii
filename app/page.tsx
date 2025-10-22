@@ -22,7 +22,7 @@ export default function Home() {
   }, []);
 
   const handleStartAction = () => {
-    router.push('/today');
+    router.push('/leapday');
   };
 
   return (

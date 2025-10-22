@@ -1,10 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  output: 'export',
+  // output: 'export',  // Vercel用にコメントアウト
   trailingSlash: true,
-  basePath: '/Hoshii',
-  assetPrefix: '/Hoshii/',
+  // basePath: '/Hoshii',  // ローカル開発時はコメントアウト
+  // assetPrefix: '/Hoshii/',  // ローカル開発時はコメントアウト
   images: {
     unoptimized: true,
     remotePatterns: [

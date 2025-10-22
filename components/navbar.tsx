@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Calendar, User, Gift, Building2 } from 'lucide-react';
+import { Home, Calendar, User, Building2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
@@ -10,7 +10,6 @@ const navItems = [
   { href: '/today', label: '今日', icon: Home },
   { href: '/events', label: 'イベント', icon: Calendar },
   { href: '/me', label: 'マイページ', icon: User },
-  { href: '/redeem', label: '交換', icon: Gift },
   { href: '/org/demo', label: '組織', icon: Building2 },
 ];
 
