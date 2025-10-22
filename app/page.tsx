@@ -479,13 +479,3 @@ export default function Home() {
                 </button>
               </div>
             </div>
-          </div>
-          
-          <p className="text-sm text-hoshii-ink/50 mt-4">
-            小さな行動が、大きな変化の始まりです
-          </p>
-        </motion.div>
-      </div>
-    </div>
-  );
-}

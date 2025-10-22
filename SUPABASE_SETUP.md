@@ -17,6 +17,7 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
 # 4. 実際の値を設定
 
 
+
 # 以下の値をSupabaseプロジェクトの設定から取得して設定してください
 
 # SupabaseプロジェクトのURL

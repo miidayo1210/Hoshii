@@ -38,3 +38,4 @@ CREATE POLICY "Allow public read access to participations" ON leapday_participat
 
 
 
+

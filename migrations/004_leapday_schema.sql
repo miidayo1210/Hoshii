@@ -24,3 +24,4 @@ create policy "public read participation count" on public.leapday_participations
 
 
 
+
