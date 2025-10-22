@@ -14,10 +14,23 @@
   --yk-shadow: 0 10px 30px rgba(179,136,255,0.25);
   --yk-glow: 0 0 24px rgba(139,227,255,0.45);
 }
-html, body { background: var(--yk-bg); }
 
-.yk-card { background: var(--yk-card); box-shadow: var(--yk-shadow); }
-.yk-glow { box-shadow: var(--yk-glow); }
+html, body { 
+  background: var(--yk-bg); 
+}
+
+body {
+  font-family: "筑紫A丸ゴシック", "Hiragino Maru Gothic ProN", "ヒラギノ丸ゴ ProN W4", "Hiragino Sans", "Yu Gothic", "Noto Sans JP", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+}
+
+.yk-card { 
+  background: var(--yk-card); 
+  box-shadow: var(--yk-shadow); 
+}
+
+.yk-glow { 
+  box-shadow: var(--yk-glow); 
+}
 
 /* Kawaii card styles */
 .kawaii-card {
@@ -32,15 +45,35 @@ html, body { background: var(--yk-bg); }
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
 }
 
+/* Reusable glass style */
+.glass {
+  background: rgba(255, 255, 255, 0.75);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+/* Puyo pressed effect */
+.puyo { 
+  transition: transform 120ms ease, box-shadow 160ms ease; 
+}
+
+.puyo:active { 
+  transform: scale(0.96); 
+  box-shadow: inset 0 3px 10px rgba(0,0,0,0.12), 0 6px 14px rgba(0,0,0,0.08); 
+}
+
 @keyframes floaty {
   0% { transform: translateY(0px); }
   50% { transform: translateY(-6px); }
   100% { transform: translateY(0px); }
 }
+
 @keyframes twinkle {
   0%,100% { opacity: .8; filter: blur(0px);}
   50% { opacity: 1; filter: blur(0.5px);}
 }
+
 @keyframes jelly {
   0% { transform: scale(1,1); }
   40% { transform: scale(0.96,1.04); }
@@ -108,5 +141,23 @@ html, body { background: var(--yk-bg); }
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  /* Custom components can be added here */
+}
+
+@layer utilities {
+  /* Custom utilities can be added here */
+  
+  /* カスタムカーソル用のスタイル */
+  input, textarea, select {
+    cursor: text !important;
+  }
+  
+  /* カスタムカーソルが入力フィールド上にある時は非表示 */
+  input:hover, textarea:hover, select:hover {
+    cursor: text !important;
   }
 }

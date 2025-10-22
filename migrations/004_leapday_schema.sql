@@ -22,3 +22,5 @@ create policy "public insert participation" on public.leapday_participations for
 create policy "public read participation count" on public.leapday_participations for select using (true);
 
 
+
+

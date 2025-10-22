@@ -1,73 +1,151 @@
 "use client";
-import useSWR from "swr";
-import { useEffect, useMemo, useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useAuth } from "@/lib/auth-context";
+import { commentManager } from "@/lib/comment-manager";
 
 type Item = { id:string; name:string; label:string; comment:string; created_at:string };
 
-const fetcher = (u:string)=>fetch(u).then(r=>r.json());
-
-function bubbleColor(i:number){
-  const palette = [
-    "rgba(179,136,255,0.25)",
-    "rgba(139,227,255,0.25)",
-    "rgba(255,209,232,0.28)",
-    "rgba(154,247,215,0.26)",
-  ];
-  return palette[i % palette.length];
+interface FloatingCommentsProps {
+  projectId?: string;
 }
 
-export default function FloatingComments(){
-  const { data } = useSWR<{items:Item[]}>("/api/leapday/comments?limit=40", fetcher, { refreshInterval: 6000 });
-  const items = data?.items ?? [];
+export default function FloatingComments({ projectId = '8c182150-47c5-4933-b664-c343f5703031' }: FloatingCommentsProps){
+  const { user } = useAuth();
+  const [newComment, setNewComment] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [comments, setComments] = useState<Item[]>([]);
 
-  // distribute bubbles into columns
-  const cols = 3;
-  const columns = useMemo(()=>{
-    const arr: Item[][] = Array.from({length:cols}, ()=>[]);
-    items.forEach((it, i)=> arr[i%cols].push(it));
-    return arr;
-  }, [items]);
+  // グローバルコメント管理の初期化とリスナー設定
+  useEffect(() => {
+    commentManager.init();
+    
+    // 初期デモコメント
+    const initialComments: Item[] = [
+      {
+        id: 'demo1',
+        name: 'ユーザー1',
+        label: 'コメント',
+        comment: '素晴らしいプロジェクトですね！',
+        created_at: new Date().toISOString()
+      },
+      {
+        id: 'demo2',
+        name: 'ユーザー2',
+        label: 'コメント',
+        comment: '参加できて嬉しいです！',
+        created_at: new Date(Date.now() - 60000).toISOString()
+      },
+      {
+        id: 'demo3',
+        name: 'ユーザー3',
+        label: 'コメント',
+        comment: 'みんなで頑張りましょう！',
+        created_at: new Date(Date.now() - 120000).toISOString()
+      }
+    ];
 
-  // slow drift baseline
-  const [key,setKey] = useState(0);
-  useEffect(()=>{ const t = setInterval(()=>setKey(k=>k+1), 15000); return ()=>clearInterval(t); },[]);
+    // グローバルコメントとデモコメントを結合
+    const globalComments = commentManager.getComments();
+    setComments([...globalComments, ...initialComments]);
+
+    // グローバルコメントの変更を監視
+    const unsubscribe = commentManager.addListener((newComments) => {
+      setComments([...newComments, ...initialComments]);
+    });
+
+    return unsubscribe;
+  }, []);
+
+  console.log('FloatingComments 状態:', { commentsCount: comments.length, comments });
+
+  // コメント投稿
+  const handleSubmitComment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newComment.trim() || !user || isSubmitting) return;
+
+    setIsSubmitting(true);
+    try {
+      const newCommentItem: Item = {
+        id: `local_${Date.now()}`,
+        name: user.user_metadata?.name || 'ユーザー',
+        label: 'コメント',
+        comment: newComment.trim(),
+        created_at: new Date().toISOString()
+      };
+      
+      // グローバルコメント管理に追加
+      commentManager.addComment(newCommentItem);
+      setNewComment('');
+      console.log('コメント投稿完了:', newCommentItem);
+    } catch (error) {
+      console.error('コメント投稿エラー:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="relative w-full">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-        {columns.map((col, ci)=>(
-          <div key={ci} className="relative space-y-3">
-            {col.map((it, i)=>(
-              <motion.div
-                key={it.id}
-                initial={{ y: 30, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: (i%6)*0.08, type:"spring", stiffness: 220, damping: 24 }}
-                className="rounded-2xl p-3 backdrop-blur bg-white/70 border border-white/60 shadow"
-                style={{ boxShadow: "0 10px 30px rgba(0,0,0,0.06)" }}
-              >
-                <div className="text-[11px] text-gray-500">{it.name} · {new Date(it.created_at).toLocaleString()}</div>
-                <div className="text-[12px] text-emerald-700 mb-1">「{it.label}」</div>
-                <div className="text-[14px] text-gray-800">{it.comment}</div>
-              </motion.div>
-            ))}
+      {/* コメント投稿フォーム */}
+      {user && (
+        <div className="mb-4">
+          <form onSubmit={handleSubmitComment} className="flex gap-2">
+            <input
+              type="text"
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder="声を投稿してください..."
+              className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              maxLength={200}
+            />
+            <button
+              type="submit"
+              disabled={!newComment.trim() || isSubmitting}
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isSubmitting ? '投稿中...' : '投稿'}
+            </button>
+          </form>
+        </div>
+      )}
+
+      {/* LIVE CHAT風のコメント表示 */}
+      <div className="max-h-80 overflow-y-auto bg-gray-50 rounded-lg p-3 space-y-2">
+        {comments.length === 0 ? (
+          <div className="text-center text-gray-500 text-sm py-4">
+            まだ声が投稿されていません
           </div>
-        ))}
+        ) : (
+          comments.map((item, index) => (
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="bg-white rounded-lg p-3 shadow-sm border border-gray-100"
+            >
+              <div className="flex items-start justify-between mb-1">
+                <span className="text-sm font-medium text-gray-800">{item.name}</span>
+                <span className="text-xs text-gray-500">
+                  {new Date(item.created_at).toLocaleTimeString('ja-JP', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                  })}
+                </span>
+              </div>
+              <div className="text-sm text-gray-700">{item.comment}</div>
+            </motion.div>
+          ))
+        )}
       </div>
 
-      {/* soft floating halos behind (subtle, dream-like) */}
-      <div className="pointer-events-none absolute inset-x-0 -z-10 h-40 md:h-48">
-        {[0,1,2].map(i=>(
-          <motion.div
-            key={i} className="absolute rounded-full blur-3xl"
-            style={{ background: bubbleColor(i), width: 220, height: 220, left: `${10 + i*35}%`, top: -40 }}
-            animate={{ y: [0, -8, 0] }} transition={{ repeat: Infinity, duration: 8 + i*2, ease: "easeInOut" }}
-          />
-        ))}
-      </div>
+      {/* スクロールインジケーター */}
+      {comments.length > 5 && (
+        <div className="text-center mt-2">
+          <span className="text-xs text-gray-500">↑ スクロールして過去の声を見る</span>
+        </div>
+      )}
     </div>
   );
 }
-
-

@@ -36,8 +36,8 @@ export default function BusinessPage() {
     },
     {
       icon: <TrendingUp className="h-6 w-6" />,
-      description: "データ分析",
-      title: "行動データの分析とレポート機能で改善点を発見"
+      title: "データ分析",
+      description: "行動データの分析とレポート機能で改善点を発見"
     },
     {
       icon: <Shield className="h-6 w-6" />,

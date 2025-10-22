@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:local": "HOST=127.0.0.1 PORT=3001 next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

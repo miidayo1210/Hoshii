@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { commentManager } from "@/lib/comment-manager";
 
 /**
  * Grand star sky: parallax nebula + twinkling stars + random shooting stars.
@@ -7,6 +8,11 @@ import { useEffect, useRef } from "react";
  */
 export default function StarSky({ density = 220 }: { density?: number }){
   const ref = useRef<HTMLCanvasElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [bubbleComments, setBubbleComments] = useState<{id?: string; comment: string}[]>([]);
+  const [bubbleTargets, setBubbleTargets] = useState<{x: number; y: number}[]>([]);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [starsCount, setStarsCount] = useState(0);
 
   useEffect(()=>{
     const canvas = ref.current!;
@@ -29,21 +35,52 @@ export default function StarSky({ density = 220 }: { density?: number }){
     window.addEventListener("resize", onResize);
 
     // fetch star count and participation data
-    let participations: {action_key: string, created_at: string, name?: string}[] = [];
+    let participations: {action_type: string, created_at: string, user_id?: string}[] = [];
     async function fetchStarData(){
       try {
-        const [statsResponse, partsResponse] = await Promise.all([
-          fetch('/api/leapday/stats'),
-          fetch('/api/leapday/comments?limit=200')
-        ]);
+        const statsResponse = await fetch('/api/leapday/stats');
         const statsData = await statsResponse.json();
-        const partsData = await partsResponse.json();
-        totalStars = statsData.total || 0;
-        participations = partsData.items || [];
+        totalStars = statsData.starsCount || 0;
+        setStarsCount(totalStars); // 状態も更新
+        participations = statsData.actions || [];
       } catch (e) {
         console.log('Failed to fetch star data:', e);
         totalStars = 0;
+        setStarsCount(0);
         participations = [];
+      }
+    }
+
+    // コメントを取得（みんなの声から最大2件）
+    type CommentItem = { id?: string; comment: string };
+    const projectId = '8c182150-47c5-4933-b664-c343f5703031';
+    async function fetchComments() {
+      try {
+        // グローバルコメント管理からコメントを取得
+        const globalComments = commentManager.getComments();
+        
+        // デモコメントも追加
+        const demoComments: CommentItem[] = [
+          { id: 'demo1', comment: '素晴らしいプロジェクトですね！' },
+          { id: 'demo2', comment: '参加できて嬉しいです！' },
+          { id: 'demo3', comment: 'みんなで頑張りましょう！' },
+          { id: 'demo4', comment: '楽しいイベントです！' },
+          { id: 'demo5', comment: '応援しています！' }
+        ];
+        
+        // グローバルコメントとデモコメントを結合
+        const allComments = [
+          ...globalComments.map(c => ({ id: c.id, comment: c.comment })),
+          ...demoComments
+        ];
+        
+        const shuffled = [...allComments].sort(() => Math.random() - 0.5);
+        const selectedComments = shuffled.slice(0, 2);
+        setBubbleComments(selectedComments);
+        console.log('StarSky コメント設定:', { selectedComments, globalCommentsCount: globalComments.length });
+      } catch (e) {
+        console.error('StarSky コメント設定エラー:', e);
+        setBubbleComments([]);
       }
     }
 
@@ -132,19 +169,16 @@ export default function StarSky({ density = 220 }: { density?: number }){
           const participationIndex = i - baseStars;
           const participation = participations[participationIndex];
           
-          if (participation && participation.action_key) {
-            // Determine if it's a "before" or "day" action
-            const isBeforeAction = participation.action_key.includes('support_message') || 
-                                 participation.action_key.includes('memory_ibaraki') ||
-                                 participation.action_key.includes('what_student_like') ||
-                                 participation.action_key.includes('thanks_parents');
+          if (participation && participation.action_type) {
+            // Determine if it's a "support" or "star" action
+            const isSupportAction = participation.action_type === 'support';
             
-            color = isBeforeAction ? '#FFFF00' : '#FF6B6B'; // Bright yellow for before, Red for day
-            starName = participation.name || '匿名'; // 星の名前を設定
+            color = isSupportAction ? '#FFFF00' : '#FF6B6B'; // Bright yellow for support, Red for star
+            starName = `アクション${participationIndex + 1}`; // 星の名前を設定
           } else {
-            // Default to bright yellow for new stars if no action_key
+            // Default to bright yellow for new stars if no action_type
             color = '#FFFF00';
-            starName = '匿名';
+            starName = 'アクション';
           }
         }
         
@@ -183,9 +217,23 @@ export default function StarSky({ density = 220 }: { density?: number }){
           });
         });
       }
+
+      // 吹き出しの位置を星に割り当て（新しい星の中から最大2つ）
+      if (bubbleComments.length > 0) {
+        const candidateStars = stars.filter((s) => s.color && s.color !== '#fff');
+        const picks = [...candidateStars].sort(() => Math.random() - 0.5).slice(0, Math.min(2, bubbleComments.length));
+        setBubbleTargets(picks.map((s) => ({ x: s.x, y: s.y })));
+      } else {
+        setBubbleTargets([]);
+      }
     }
     
-    fetchStarData().then(() => seed());
+    fetchStarData().then(() => fetchComments()).then(() => seed());
+
+    // リアルタイム更新（30秒ごと）
+    const updateInterval = setInterval(() => {
+      fetchStarData().then(() => fetchComments()).then(() => seed());
+    }, 30000);
 
     // mouse parallax and hover detection
     let parX=0, parY=0, targetX=0, targetY=0;
@@ -443,7 +491,7 @@ export default function StarSky({ density = 220 }: { density?: number }){
 
     return ()=>{
       cancelAnimationFrame(raf);
-      // clearInterval(starUpdateInterval); // disabled
+      clearInterval(updateInterval);
       window.removeEventListener("resize", onResize);
       window.removeEventListener("mousemove", onMove);
       if(tooltip && tooltip.parentNode){
@@ -452,8 +500,67 @@ export default function StarSky({ density = 220 }: { density?: number }){
     };
   }, []);
 
-  return <div className="relative w-full h-[46vh] md:h-[56vh] rounded-2xl overflow-hidden yk-glow">
+  return <div ref={wrapperRef} className="relative w-full h-[46vh] md:h-[56vh] rounded-2xl overflow-hidden yk-glow">
     <canvas ref={ref} className="w-full h-full block" />
     <div className="pointer-events-none absolute inset-0 yk-halo" />
+
+    {/* 吹き出しオーバーレイ（最大2件） */}
+    <div id="star-bubbles" className="absolute inset-0 pointer-events-none">
+      {bubbleComments.map((comment, idx) => (
+        <div 
+          key={comment.id || idx}
+          className="absolute max-w-xs text-[11px] leading-snug bg-white/90 backdrop-blur px-2 py-1 rounded-lg shadow border border-white"
+          style={{ 
+            left: `${(bubbleTargets[idx]?.x || 100) + 14}px`, 
+            top: `${(bubbleTargets[idx]?.y || 100) - 28}px`,
+            zIndex: 10
+          }}
+        >
+          {comment.comment}
+        </div>
+      ))}
+    </div>
+
+    {/* 右下の全画面ボタン */}
+    <button
+      type="button"
+      onClick={() => {
+        const el = wrapperRef.current;
+        if (!el) return;
+        if (document.fullscreenElement) {
+          document.exitFullscreen().catch(() => {});
+          setIsFullscreen(false);
+        } else {
+          el.requestFullscreen?.().then(() => {
+            setIsFullscreen(true);
+          }).catch(() => {});
+        }
+      }}
+      className="absolute bottom-2 right-2 z-20 px-3 py-1.5 text-xs rounded-full bg-white/80 hover:bg-white shadow border border-white/70 text-gray-700 backdrop-blur"
+    >
+      {isFullscreen ? '全画面解除' : '全画面'}
+    </button>
+
+    {/* 全画面時の左側情報パネル */}
+    {isFullscreen && (
+      <div className="absolute left-0 top-0 w-1/5 h-full bg-black/20 backdrop-blur-sm z-10 flex flex-col justify-center items-center text-white p-4">
+        <div className="text-center space-y-8">
+          <div>
+            <h3 className="text-lg font-bold mb-2">みんなの声</h3>
+            <div className="text-sm space-y-1">
+              {bubbleComments.slice(0, 3).map((comment, idx) => (
+                <div key={comment.id || idx} className="bg-white/10 rounded p-2 text-xs">
+                  {comment.comment}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div>
+            <h3 className="text-lg font-bold mb-2">現在の星の数</h3>
+            <div className="text-3xl font-bold">{starsCount.toLocaleString()}</div>
+          </div>
+        </div>
+      </div>
+    )}
   </div>;
 }

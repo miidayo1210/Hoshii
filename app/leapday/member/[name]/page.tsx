@@ -58,7 +58,7 @@ export default function MemberPage({ params }: PageProps) {
         </div>
         <p className="text-[15px] text-gray-600 text-center">会場やオンラインからアクションが実行されると、星が増えていきます。</p>
         <div className="text-center">
-          <DreamButton as="a" href="/leapday/support" className="inline-block">💖 応援する</DreamButton>
+          <DreamButton as="a" href="/leapday/support" className="inline-block">💖 参加する</DreamButton>
         </div>
       </section>
     </div>

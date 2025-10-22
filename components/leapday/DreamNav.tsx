@@ -4,8 +4,8 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 
 const items = [
-  { href: "/leapday", label: "LEAP DAYの星空", emoji:"🌌" },
-  { href: "/leapday/support", label: "応援する", emoji:"💖" },
+  { href: "/leapday", label: "みんなの景色", emoji:"🌌" },
+  { href: "/leapday/support", label: "参加する", emoji:"💖" },
 ];
 
 export default function DreamNav(){
@@ -40,5 +40,7 @@ export default function DreamNav(){
     </nav>
   );
 }
+
+
 
 

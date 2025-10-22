@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { ConditionalNavBar } from "@/components/conditional-navbar";
+import { AuthProvider } from "@/lib/auth-context";
+import { AuthButton } from "@/components/auth/AuthButton";
+import { FloatingBackground } from "@/components/FloatingBackground";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,13 +27,23 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <main className="min-h-screen">
-          {children}
-        </main>
-        <ConditionalNavBar />
+        <AuthProvider>
+          <main className="min-h-screen relative">
+            {/* 動く背景要素 */}
+            <FloatingBackground />
+            
+            {/* 認証ボタン */}
+            <div className="fixed top-4 right-4 z-50">
+              <AuthButton />
+            </div>
+            
+            {/* メインコンテンツ */}
+            <div className="relative z-10">
+              {children}
+            </div>
+          </main>
+        </AuthProvider>
       </body>
     </html>
   );
 }
-
-
