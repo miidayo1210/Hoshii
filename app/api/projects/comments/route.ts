@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -38,6 +38,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
+    const supabase = createClient();
     const { data, error } = await supabase
       .from('project_supports')
       .select(`
@@ -86,6 +87,58 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ comments: items });
   } catch (error) {
     console.error('コメント取得エラー:', error);
+    return NextResponse.json({ error: 'サーバーエラーが発生しました' }, { status: 500 });
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { projectId, content, userId } = body;
+
+    console.log('コメント投稿API呼び出し:', { projectId, content, userId });
+
+    if (!projectId || !content) {
+      return NextResponse.json({ error: 'projectId and content are required' }, { status: 400 });
+    }
+
+    // Supabaseが設定されていない場合はデモモード
+    const isSupabaseConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && 
+      !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder');
+
+    if (!isSupabaseConfigured) {
+      console.log('Supabase未設定 - デモモードでコメント投稿');
+      return NextResponse.json({ 
+        success: true, 
+        message: 'コメントが投稿されました（デモモード）' 
+      });
+    }
+
+    // Supabaseにコメントを保存
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from('project_supports')
+      .insert({
+        project_id: projectId,
+        user_id: userId || 'anonymous',
+        action_type: 'comment',
+        comment: content
+      })
+      .select();
+
+    if (error) {
+      console.error('コメント投稿エラー:', error);
+      return NextResponse.json({ error: 'コメントの投稿に失敗しました' }, { status: 500 });
+    }
+
+    console.log('コメント投稿成功:', data);
+    return NextResponse.json({ 
+      success: true, 
+      message: 'コメントが投稿されました',
+      data: data[0]
+    });
+  } catch (error) {
+    console.error('コメント投稿エラー:', error);
     return NextResponse.json({ error: 'サーバーエラーが発生しました' }, { status: 500 });
   }
 }
