@@ -36,7 +36,7 @@ export function ActionCard({ action, onClick, onComplete }: ActionCardProps) {
         <CardContent className="pt-12 pb-4 px-5">
           <div className="flex items-start justify-between gap-2 mb-3">
             <h3 className="font-semibold text-lg leading-tight text-hoshii-ink">{action.title}</h3>
-            <Badge variant="outline" className="flex items-center gap-1 shrink-0 rounded-full border-hoshii-green/30 bg-hoshii-mint">
+            <Badge className="flex items-center gap-1 shrink-0 rounded-full border-hoshii-green/30 bg-hoshii-mint">
               <span className="text-base">⭐</span>
               <span className="text-hoshii-ink">×1</span>
             </Badge>
@@ -46,7 +46,7 @@ export function ActionCard({ action, onClick, onComplete }: ActionCardProps) {
             {action.description}
           </p>
           
-          <Badge variant="secondary" className="capitalize rounded-full bg-hoshii-green2 text-hoshii-ink border-0">
+          <Badge className="capitalize rounded-full bg-hoshii-green2 text-hoshii-ink border-0">
             {action.domain}
           </Badge>
         </CardContent>

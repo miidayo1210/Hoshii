@@ -68,7 +68,7 @@ export default function FloatingComments({ projectId = '8c182150-47c5-4933-b664-
     try {
       const newCommentItem: Item = {
         id: `local_${Date.now()}`,
-        name: user.user_metadata?.name || 'ユーザー',
+        name: (user as any).user_metadata?.name || 'ユーザー',
         label: 'コメント',
         comment: newComment.trim(),
         created_at: new Date().toISOString()

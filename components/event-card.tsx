@@ -52,7 +52,7 @@ export function EventCard({
         <CardContent className="pt-12 pb-4 px-5">
           <div className="flex items-start justify-between gap-2 mb-4">
             <h3 className="font-semibold text-lg leading-tight text-hoshii-ink">{event.title}</h3>
-            <Badge variant="outline" className="flex items-center gap-1 shrink-0 rounded-full border-hoshii-green/30 bg-hoshii-mint">
+            <Badge className="flex items-center gap-1 shrink-0 rounded-full border-hoshii-green/30 bg-hoshii-mint">
               <span className="text-base">⭐</span>
               <span className="text-hoshii-ink">×1</span>
             </Badge>
@@ -70,7 +70,7 @@ export function EventCard({
           </div>
           
           <div className="mt-4">
-            <Badge variant="secondary" className="capitalize rounded-full bg-hoshii-green2 text-hoshii-ink border-0">
+            <Badge className="capitalize rounded-full bg-hoshii-green2 text-hoshii-ink border-0">
               {event.domain}
             </Badge>
           </div>

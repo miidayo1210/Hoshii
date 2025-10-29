@@ -32,7 +32,6 @@ export function RedeemCatalog({ items, userStamps, onRedeem }: RedeemCatalogProp
                 <div className="flex items-start justify-between gap-2 mb-4">
                   <h3 className="font-semibold text-lg leading-tight text-hoshii-ink">{item.title}</h3>
                   <Badge 
-                    variant={canAfford ? "default" : "secondary"}
                     className="flex items-center gap-1 shrink-0 rounded-full border-hoshii-earth/30 bg-hoshii-sand"
                   >
                     <span className="text-base">⭐</span>
@@ -42,7 +41,7 @@ export function RedeemCatalog({ items, userStamps, onRedeem }: RedeemCatalogProp
                 
                 <p className="text-[15.5px] text-hoshii-ink/70 leading-relaxed mb-4">{item.description}</p>
                 
-                <Badge variant="outline" className="capitalize rounded-full bg-hoshii-sky/40 border-hoshii-sky/50 text-hoshii-ink">
+                <Badge className="capitalize rounded-full bg-hoshii-sky/40 border-hoshii-sky/50 text-hoshii-ink">
                   {item.category}
                 </Badge>
               </CardContent>

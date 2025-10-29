@@ -203,7 +203,7 @@ export function CreateActionModal({ children, onActionCreated }: CreateActionMod
             {formData.tags.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-2">
                 {formData.tags.map(tag => (
-                  <Badge key={tag} variant="default" className="bg-community-purple">
+                  <Badge key={tag} className="bg-community-purple">
                     {tag}
                     <button
                       onClick={() => handleTagRemove(tag)}
@@ -223,7 +223,6 @@ export function CreateActionModal({ children, onActionCreated }: CreateActionMod
                 .map(tag => (
                   <Badge
                     key={tag}
-                    variant="secondary"
                     className="cursor-pointer hover:bg-gray-200"
                     onClick={() => handleTagAdd(tag)}
                   >

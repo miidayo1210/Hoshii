@@ -138,12 +138,12 @@ export function ActionCard({
           {tags.length > 0 && (
             <div className="flex flex-wrap gap-1">
               {tags.slice(0, 3).map((tag) => (
-                <Badge key={tag} variant="secondary" className="text-xs">
+                <Badge key={tag} className="text-xs">
                   {tag}
                 </Badge>
               ))}
               {tags.length > 3 && (
-                <Badge variant="outline" className="text-xs">
+                <Badge className="text-xs">
                   +{tags.length - 3}
                 </Badge>
               )}
@@ -238,12 +238,12 @@ export function BoardCard({
           {tags.length > 0 && (
             <div className="flex flex-wrap gap-1">
               {tags.slice(0, 2).map((tag) => (
-                <Badge key={tag} variant="secondary" className="text-xs">
+                <Badge key={tag} className="text-xs">
                   {tag}
                 </Badge>
               ))}
               {tags.length > 2 && (
-                <Badge variant="outline" className="text-xs">
+                <Badge className="text-xs">
                   +{tags.length - 2}
                 </Badge>
               )}
