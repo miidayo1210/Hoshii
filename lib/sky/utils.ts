@@ -70,9 +70,10 @@ export async function getSkyStats(skyId: SkyId): Promise<SkyStats | null> {
  * 星空のアクション定義を取得
  */
 export async function getSkyActions(skyId: SkyId): Promise<ActionDef[]> {
-  const sb = createServerClient();
+  const sb = await createServerClient();
   
-  const { data, error } = await sb
+  const sbClient = await sb;
+  const { data, error } = await sbClient
     .from("actions")
     .select("*")
     .eq("sky_id", skyId)
@@ -100,7 +101,7 @@ export async function getSkyParticipations(
   skyId: SkyId, 
   limit: number = 40
 ): Promise<Participation[]> {
-  const sb = createServerClient();
+  const sb = await createServerClient();
   
   const { data, error } = await sb
     .from("participations")
@@ -137,7 +138,7 @@ export async function addParticipation(input: {
   email?: string; 
   comment?: string;
 }): Promise<SkyStats | null> {
-  const sb = createServerClient();
+  const sb = await createServerClient();
   
   // 1) action存在チェック
   const { data: action, error: actionError } = await sb
@@ -182,7 +183,7 @@ export async function addParticipation(input: {
  * 星空を作成
  */
 export async function createSky(skyId: SkyId, title: string): Promise<boolean> {
-  const sb = createServerClient();
+  const sb = await createServerClient();
   
   const { error } = await sb
     .from("skies")
@@ -206,7 +207,7 @@ export async function addSkyAction(
   skyId: SkyId,
   actionDef: ActionDef
 ): Promise<boolean> {
-  const sb = createServerClient();
+  const sb = await createServerClient();
   
   const { error } = await sb
     .from("actions")
