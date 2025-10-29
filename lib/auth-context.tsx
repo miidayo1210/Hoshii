@@ -47,9 +47,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Supabaseの認証状態を監視
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       try {
+        console.log('認証状態変更:', event, session?.user?.email);
         clearTimeout(timeoutId); // タイムアウトをクリア
         
         if (session?.user) {
+          console.log('ユーザーセッション確認:', session.user.email);
           // ユーザープロフィールを取得
           const { data: profile } = await supabase
             .from('user_profiles')
@@ -58,6 +60,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             .single();
 
           if (profile) {
+            console.log('プロフィール取得成功:', profile);
             setUser({
               id: session.user.id,
               email: session.user.email || '',
@@ -67,6 +70,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               name: profile.name
             });
           } else {
+            console.log('プロフィールなし、基本情報のみ設定');
             // プロフィールがない場合は基本情報のみ
             setUser({
               id: session.user.id,
@@ -75,6 +79,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             });
           }
         } else {
+          console.log('セッションなし、ユーザーをnullに設定');
           setUser(null);
         }
       } catch (error) {
@@ -93,12 +98,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (email: string, password: string) => {
     try {
+      console.log('ログイン開始:', email);
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('ログインエラー:', error);
+        throw error;
+      }
+      console.log('ログイン成功');
     } catch (error) {
       console.error('ログインエラー:', error);
       throw error;

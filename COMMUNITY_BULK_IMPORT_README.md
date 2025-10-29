@@ -147,3 +147,5 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 
 
 
+
+

@@ -113,8 +113,11 @@ export default function Home() {
                 borderRadius: '50%',
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 2}s`,
-                animation: 'sparkle 2s ease-in-out infinite'
+                animationName: 'sparkle',
+                animationDuration: '2s',
+                animationTimingFunction: 'ease-in-out',
+                animationIterationCount: 'infinite',
+                animationDelay: `${Math.random() * 2}s`
               }}
             />
           ))}
