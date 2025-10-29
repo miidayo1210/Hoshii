@@ -158,7 +158,7 @@ export default function Page(){
       <section className="relative z-10">
         <h2 className="text-xl font-bold text-center mb-4 text-gray-800">みんなで作る星空</h2>
         <div className="relative w-full h-[400px] bg-gray-900 rounded-xl shadow-lg overflow-hidden">
-          <StarSky starsCount={starsCount} />
+          <StarSky density={0.3} />
           <FloatingComments projectId={projectId} />
         </div>
         <div className="mt-4 text-center text-lg font-semibold text-gray-800">

@@ -12,7 +12,10 @@
     "migrate": "node scripts/run-migration.js",
     "migrate:community": "node scripts/run-migration.js migrations/001_add_community_features.sql",
     "export": "next build && next export",
-    "deploy": "npm run build"
+    "deploy": "npm run build",
+    "deploy:vercel": "./deploy.sh",
+    "vercel:deploy": "vercel --prod",
+    "vercel:preview": "vercel"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

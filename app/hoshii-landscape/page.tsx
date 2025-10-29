@@ -81,7 +81,7 @@ export default function Page() {
     >
       <section style={{ position: 'relative' }}>
         {/* 左：大画面 three.js */}
-        <HoshiiLandscape actionCount={actionCount} comments={comments} onStarAdded={() => {}} />
+        <HoshiiLandscape actionCount={actionCount} comments={comments} />
 
         {/* 左下：任意ボタン */}
         <div style={{ position: 'absolute', left: 16, bottom: 16, display: 'flex', gap: 8 }}>

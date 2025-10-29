@@ -108,7 +108,7 @@ export default function Page(){
         // グローバルコメント管理にも追加（即座に表示される）
         const commentItem = {
           id: `action_${Date.now()}`,
-          name: user.user_metadata?.name || 'ユーザー',
+          name: (user as any).user_metadata?.name || 'ユーザー',
           label: 'コメント',
           comment: form.comment.trim(),
           created_at: new Date().toISOString()

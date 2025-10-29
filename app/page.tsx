@@ -442,12 +442,12 @@ export default function Home() {
                   boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)'
                 }}
                 onMouseEnter={(e) => {
-                  e.target.style.transform = 'translateY(-3px)';
-                  e.target.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.15)';
+                  (e.target as HTMLElement).style.transform = 'translateY(-3px)';
+                  (e.target as HTMLElement).style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.15)';
                 }}
                 onMouseLeave={(e) => {
-                  e.target.style.transform = 'translateY(0)';
-                  e.target.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.1)';
+                  (e.target as HTMLElement).style.transform = 'translateY(0)';
+                  (e.target as HTMLElement).style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.1)';
                 }}
               >
                 {isLoading ? '処理中...' : (isLoginMode ? 'ログイン 🚀' : '新規登録 ✨')}
@@ -466,8 +466,8 @@ export default function Home() {
                   cursor: 'pointer',
                   transition: 'color 0.3s ease'
                 }}
-                onMouseEnter={(e) => e.target.style.color = '#1d4ed8'}
-                onMouseLeave={(e) => e.target.style.color = '#2563eb'}
+                onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#1d4ed8'}
+                onMouseLeave={(e) => (e.target as HTMLElement).style.color = '#2563eb'}
               >
                 {isLoginMode ? '新規登録はこちらから 👆' : '既にアカウントをお持ちの方はこちら 👆'}
               </button>
