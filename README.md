@@ -100,6 +100,44 @@ npm run build
 npm start
 ```
 
+## 🚀 Deployment to Vercel
+
+### Quick Deploy
+
+詳細は **[DEPLOY_NOW.md](./DEPLOY_NOW.md)** を参照してください。
+
+#### 前提条件
+- GitHubアカウント
+- Vercelアカウント (https://vercel.com)
+- Supabaseプロジェクト
+- Resendアカウント
+
+#### デプロイ手順
+
+1. **環境変数の準備**
+   - SupabaseのURL、Anon Key、Service Role Keyを取得
+   - ResendのAPIキーを取得
+   - メール送信元アドレスを設定
+
+2. **Vercelにデプロイ**
+   ```bash
+   # Vercel CLIを使用
+   npm i -g vercel
+   vercel login
+   vercel --prod
+   ```
+
+3. **環境変数の設定**
+   - Vercelダッシュボードで環境変数を設定
+   - Production、Preview、Developmentすべてに設定
+
+4. **動作確認**
+   - デプロイ後、URLにアクセスして動作確認
+   - ログイン・登録機能をテスト
+   - メール送信機能をテスト
+
+詳細な手順は `DEPLOY_NOW.md` を参照してください。
+
 ## Tech Stack
 
 - **Next.js 14** - App Router

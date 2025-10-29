@@ -310,7 +310,7 @@ export default function HomePage() {
               </h1>
             </div>
             <p className={`text-xl ${skyTheme.textColor}`}>
-              {user?.raw_user_meta_data?.name || user?.email || 'ユーザー'} さん、おかえりなさい！
+              {(user as any)?.user_metadata?.name || user?.email || 'ユーザー'} さん、おかえりなさい！
             </p>
           </div>
           
