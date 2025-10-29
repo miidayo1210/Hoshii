@@ -4,7 +4,7 @@ import { LEAPDAY_ACTIONS_SEED } from "@/data/leapday_actions_seed";
 
 export async function POST() {
   try {
-    const sb = createServerClient();
+    const sb = await createServerClient();
     
     // 環境変数が設定されていない場合はモックレスポンスを返す
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('mock')) {

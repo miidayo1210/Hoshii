@@ -6,7 +6,7 @@ import { COMMENT } from "@/lib/types/sky";
  * weightsを考慮した星合計
  */
 export async function calcStars(skyId: SkyId): Promise<SkyStats> {
-  const sb = createServerClient();
+  const sb = await createServerClient();
   
   // SQL: summarized_stars から拾うのが高速
   const { data: summary, error: summaryError } = await sb
